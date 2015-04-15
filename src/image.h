@@ -133,7 +133,7 @@ uint32_t* image<T>::getRGBData()
         {
             for(int x = 0; x < w; x++)
             {
-                RGB[y * h + x]=RGB32BIT((imPtr(this,x,y))->r, (imPtr(this,x,y))->g, (imPtr(this,x,y))->b);
+                RGB[y * w + x]=RGB32BIT((imPtr(this,x,y))->r, (imPtr(this,x,y))->g, (imPtr(this,x,y))->b);
             }
         }
         return RGB;
