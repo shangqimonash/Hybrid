@@ -20,6 +20,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 #define SEGMENT_IMAGE
 
 #include <cstdlib>
+#include <stdlib.h>
+#include <set>
+#include <map>
+#if defined (__linux__)
+#define random() random()
+#elif defined(_WIN32)
+#define random() (rand()%256)
+#endif
+
 
 #include "filter.h"
 #include "image.h"
@@ -44,6 +53,61 @@ static inline float diff(image<float> *r, image<float> *g, image<float> *b,
   return sqrt(square(imRef(r, x1, y1)-imRef(r, x2, y2)) +
 	      square(imRef(g, x1, y1)-imRef(g, x2, y2)) +
 	      square(imRef(b, x1, y1)-imRef(b, x2, y2)));
+}
+
+/*
+Description: transfer the universe into a map and a one-dimensional vector of label
+Input:  image<rgb> *im
+        universe *univ
+Output: map<int, vector<int> > &mapNode: represent each super-pixel with an vector
+        vector<int> &vecLabel: an vector with each pixel's label inside
+*/
+void universeToVector(image<rgb> *im, universe *univ,
+                      map<int, vector<int> > &mapNode,
+                      vector<int> &vecLabel)
+
+{
+    int width = im->width();
+    int height = im->height();
+
+    map<int, vector<int> >::iterator iter;
+    map<int, int> rootSet;
+    int numLabel = 0;
+
+    /*find all the roots*/
+    for (int i = 0; i < width * height; i++)
+    {
+        /*get current node's root*/
+        int curRoot = univ->find(i);
+        iter = mapNode.find(curRoot);
+
+        /*current root hasn't been found*/
+        if (iter == mapNode.end())
+        {
+            vector<int> child;
+            if (curRoot != i)
+            {
+                child.push_back(i);
+            }
+            mapNode.insert(pair<int, vector<int> >(curRoot, child));
+
+            rootSet.insert(pair<int, int>(curRoot, numLabel));
+            vecLabel.push_back(numLabel);
+            numLabel++;
+        }
+        /*has been found before*/
+        else
+        {
+            if (curRoot != i)
+            {
+                mapNode[curRoot].push_back(i);
+            }
+
+            vecLabel.push_back(rootSet[curRoot]);
+        }
+    }
+    /**/
+
 }
 
 /*

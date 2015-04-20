@@ -55,6 +55,7 @@ universe::~universe() {
   delete [] elts;
 }
 
+/*find the root of a tree*/
 int universe::find(int x) {
   int y = x;
   while (y != elts[y].p)
@@ -63,6 +64,7 @@ int universe::find(int x) {
   return y;
 }
 
+/*para should be root*/
 void universe::join(int x, int y) {
   if (elts[x].rank > elts[y].rank) {
     elts[y].p = x;
