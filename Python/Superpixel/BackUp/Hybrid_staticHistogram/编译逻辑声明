@@ -1,0 +1,18 @@
+首先是用cpp写好segment-image()这个函数，
+然后把这个函数的interface放到segment-image.h这个文件里面。
+
+之后，自己写一个_fh.pyx的文件，用extern这个关键词来引用我的
+segment-image.h这个头文件，之后用pyx的cdef来封装这个头文件
+里面的segment-image()这个函数
+
+接下来在_fh.pyx里面写出一个面向py的函数interface，这个时候
+就是用def来吧之前cdef封装的segment-image()来再次用python
+的函数来封装，并且调整好这个python接口函数的返回值
+
+在后，写setup.py这个文件，里面说明我要把_fh.pyx中间转换为cpp
+的语言，然后来进行编译成名字叫fh的这个函数。
+
+最后，在terminal里面输入
+python setup.py build_ext --inplace
+来进行编译，就会出现一个_fh.cpp的由cython讲_fh.pyx转换出来
+的cpp文件，和一个最后叫做fh.o的编译好的可执行文件
