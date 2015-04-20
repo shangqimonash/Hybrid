@@ -16,8 +16,8 @@ from skimage.segmentation import felzenszwalb, slic, quickshift
 from skimage.segmentation import mark_boundaries
 from skimage.util import img_as_float
 import fh
-import rag
-import global_rag
+#import rag
+#import global_rag
 import rag_staticHist
 import PIL.Image
 import rag_graph
@@ -50,11 +50,11 @@ binNum=5
 c=5
 min_size=100
 sigma=0.7
-binNum=15
+binNum=5
 plt.figure()
 time1=datetime.now()
 segments_slic = slic(img, n_segments, compactness=10, sigma=1,enforce_connectivity=True)
-slicLai=numpy.loadtxt('/Users/yuan/Downloads/slic.txt')
+#slicLai=numpy.loadtxt('/Users/yuan/Downloads/slic.txt')
 slicNum=len(numpy.unique(segments_slic))
 print (type(segments_slic))
 #这一句是吧slic的结果保存下来，在cpp中调试用的
@@ -317,7 +317,7 @@ plt.imshow(img)
 plt.figure()
 plt.imshow(mark_boundaries(img, segments_slic,color=(1,0,0)))
 plt.figure()
-plt.imshow(mark_boundaries(img, slicLai,color=(1,0,0)))
+#plt.imshow(mark_boundaries(img, slicLai,color=(1,0,0)))
 plt.imsave("fishMan_slic.jpg",mark_boundaries(img, segments_slic,color=(1,0,0)))
 plt.figure()
 plt.imshow(mark_boundaries(img,region_fh,color=(1,0,0)))

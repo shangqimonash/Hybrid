@@ -90,7 +90,8 @@ void segment_image(const unsigned int*im, const int width, const int height, int
     image<float> *r = new image<float>(width, height);
     image<float> *g = new image<float>(width, height);
     image<float> *b = new image<float>(width, height);
-    
+
+
     
     int sz=width*height;
     
@@ -113,7 +114,7 @@ void segment_image(const unsigned int*im, const int width, const int height, int
         }
     }
     
-    
+
     
     image<float> *smooth_r = smooth(r, sigma);
     image<float> *smooth_g = smooth(g, sigma);
@@ -125,8 +126,9 @@ void segment_image(const unsigned int*im, const int width, const int height, int
     /*
      初始化set和threshold[]
      */
-    
+
     outLabels=new int[width*height];
+
     universe * u=new universe(sz);
     float * graph_threshold=new float[sz];
     for (int i=0; i<sz; i++) {
@@ -201,8 +203,8 @@ void segment_image(const unsigned int*im, const int width, const int height, int
             }
         }
         }
-        
         region_segment_graph(edgeList, u,graph_threshold,c);
+
         
         //处理所有小于min_size的部分
         
@@ -215,16 +217,15 @@ void segment_image(const unsigned int*im, const int width, const int height, int
         
     }
     
+
     
     
     
-    
-    
-    
+
     *num_ccs = u->num_sets();
-    
+    std::cout << u->num_sets() << std::endl;
     int segNum=u->num_sets();
-    
+
     /*
      输出outLabels[]是一个1-d vector，从0-segNum来编号，但是这里segRegion的编号不是从
      pixel[0][0]开始就为0的，而是第一个找到的rootNode对应的那个region label为0
@@ -232,6 +233,7 @@ void segment_image(const unsigned int*im, const int width, const int height, int
     
     int label=0;
     for (int i=0; i<width*height; i++) {
+        std::cout << i << std::endl;
         int rootNode=u->find(i);
         if (rootNode==i) {
             outLabels[i]=label;
@@ -246,8 +248,7 @@ void segment_image(const unsigned int*im, const int width, const int height, int
         int rootNode=u->find(i);
         outLabels[i]=outLabels[rootNode];
     }
-    
-    
+
     image<rgb> *output = new image<rgb>(width, height);
     
     

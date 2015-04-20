@@ -24,6 +24,7 @@ print (lab.shape)
 #img = img_as_float(lena()[::2, ::2])
 print('kakaka')
 segments_slic = slic(img, n_segments=100, compactness=10, sigma=1,enforce_connectivity=True)
+print('ddddd')
 slicNum=len(numpy.unique(segments_slic))
 print (type(segments_slic))
 #这一句是吧slic的结果保存下来，在cpp中调试用的
@@ -42,7 +43,7 @@ sigma=0.8
 plt.figure()
 
 
-
+print('dsafs')
 region_fh=fh.fh_seg(img,segments_slic,slicNum,sigma,c,min_size)
 print("FH matrix")
 print(type(region_fh))
@@ -55,11 +56,11 @@ fhNum=len(numpy.unique(region_fh))
 print("FH number of segments: %d" % fhNum)
 print("Slic number of segments: %d" % slicNum)
 
-plt.imshow(mark_boundaries(img, segments_slic,color=(1,1,1)))
-plt.imsave("fishMan_slic.jpg",mark_boundaries(img, segments_slic,color=(1,1,1)))
+plt.imshow(mark_boundaries(img, segments_slic,color=(0,1,1)))
+plt.imsave("fishMan_slic.jpg",mark_boundaries(img, segments_slic,color=(0,1,1)))
 plt.figure()
-plt.imshow(mark_boundaries(img,region_fh,color=(1,1,1)))
-plt.imsave("fishMan_Hybrid.jpg",mark_boundaries(img,region_fh,color=(1,1,1)))
+plt.imshow(mark_boundaries(img,region_fh,color=(0,1,1)))
+plt.imsave("fishMan_Hybrid.jpg",mark_boundaries(img,region_fh,color=(0,1,1)))
 #plt.imshow(mark_boundaries(img,region_fh_teskMask))
 
 plt.show()
