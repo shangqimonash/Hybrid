@@ -39,6 +39,7 @@ while superpixelNum>userInputNum and heap>0:
 		newHist=两个bin为频率的histogram相加
 		purity_after=entropy(newHist)
 		purity_loss=purity_after-purity_before
+
 		
 		//如果当前heap顶部对应的edge weight需要update，则update，并且更新heap
 		if purity_loss!=heapArray[0].weight:
@@ -51,28 +52,41 @@ while superpixelNum>userInputNum and heap>0:
 			u.union(src_root,dst_root)
 
 
+//rag 的功能就是为了记录合并之后histogram的值，至于两个node是否已经merge,rag class没有办法查看
+//判断两个node 是否合并，根据universe来得到
+
+
 
 RAG class
 	addNode(ID,attribute)
 		添加一个node，这个node有以下的attribue：
-		pixelCount：记录这个node对应的superpixel region的pixel数量
-		hist：一位数组，保存记录每个bin中pixel的数量
-
+			pixelCount：记录这个node对应的superpixel region的pixel数量
+			hist：一位数组，保存记录每个bin中pixel的数量
 
 	addEdge(src,dst)
-		1. 仅仅记录有一个那些src之间有edge就可以，edge的weight是在之后heap里面求的哲理不需要。
+		1.仅仅记录那些src之间有edge就可以，edge的weight是在之后heap里面求的这里不需要。
 		2. 如果src，dst没有加入graph，这里还需要首先addNode()
 		3. 无向图，所以src和dst上面都要存储adjacent list
+
 	getNeighbor(ID)
-		找到某个node周围所有的edge，对应的node ID
+		输出：某个node周围所有的edge对应邻居的node ID
+
 	mergeNode(src,dst)
-		1. 新的node ID是dst的ID,src node删除
-		2. 新node attribute更新，histogram，pixelCount，mergeList
-		3. 集合运算，把list转换为set
+		1. 新的node ID是dst的ID, src node删除
+		2. 集合运算，把list转换为set，通过集合运算，找到融合之后大node的neighbor
 			(1,2,4)|(1,3,5)-(3,4)=(1,2,5)
 			1是3，4共有的neighbor，2是3独有的neighbor，5是4独有的
-	？allEdge() 
-		输出这个RAG的所有edge，因为我用的是无向图，所以每个edge在src，dst两个node上面都有存储，如果遍历输出就会有输出两个重复的edge，这个时候，可以overLoad Edge class的==运算，在
+		3. 新node attribute更新，histogram，pixelCount就是之前两node对应属性相加
+
+	allEdge() 
+		输出：一个edge的数组，每个item包括edge.src,edge.dst
+		注意：
+		输出这个RAG的所有edge，因为我用的是无向图，所以每个edge在src，dst两个node上面都有存储，如果遍历输出就会有输出两个重复的edge，这个时候，可以overLoad Edge class 的 == 运算来预先判断
+		
+	其他：
+	RAG class可以直接访问某个node。
+	rag.node[ID].histogram，rag.node[ID].pixelCoutn可以直接对这个进行操作
+
 
 	constructRAG(slicLabel,fhLabel,img,binNum)
 		for y from 0 to height
