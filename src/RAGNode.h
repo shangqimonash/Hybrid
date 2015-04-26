@@ -17,6 +17,10 @@ public:
     RAGNode();
     ~RAGNode() {};
 
+// Getter and Setter
+public:
+    std::vector<rgb>& get_pixel() { return pixels; };
+
 // Some public methods and Overrides
 public:
     void addPixel(rgb RGB);
