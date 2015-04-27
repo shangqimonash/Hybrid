@@ -2,14 +2,14 @@
 #define RAG_NODE_H 1
 
 #include <inttypes.h>
-#include <vector>
+#include <map>
 
 #include "misc.h"
 
 class RAGNode
 {
 private:
-    std::vector<rgb> pixels;
+    std::map<int, rgb> pixels;
     uint8_t *hist;
 
 // Constructor and Destructor
@@ -19,11 +19,11 @@ public:
 
 // Getter and Setter
 public:
-    std::vector<rgb>& get_pixel() { return pixels; };
+    std::map<int, rgb>& get_pixel() { return pixels; };
 
 // Some public methods and Overrides
 public:
-    void addPixel(rgb RGB);
+    void addPixel(int offset, rgb RGB);
     void calculateHist(int numBin);
 };
 
@@ -36,9 +36,9 @@ RAGNode::RAGNode()
     hist = NULL;
 }
 
-void RAGNode::addPixel(rgb RGB)
+void RAGNode::addPixel(int offset, rgb RGB)
 {
-    pixels.push_back(RGB);
+    pixels[offset] = RGB;
 }
 
 void RAGNode::calculateHist(int numBin)
@@ -51,12 +51,12 @@ void RAGNode::calculateHist(int numBin)
 
     float binSize = (float)256/numBin;
 
-    for(std::vector<rgb>::const_iterator it = pixels.begin();
+    for(std::map<int, rgb>::const_iterator it = pixels.begin();
         it != pixels.end(); it++)
     {
-        int binR = it->r/binSize;
-        int binG = it->g/binSize;
-        int binB = it->b/binSize;
+        int binR = it->second.r/binSize;
+        int binG = it->second.g/binSize;
+        int binB = it->second.b/binSize;
 
         hist[binR * sqrt(numBin) + binG * numBin + binB]++;
     }

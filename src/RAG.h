@@ -7,7 +7,7 @@
 #include "RAGNode.h"
 #include "image.h"
 
-#define INF_EDGE RAGEdge(-1); //Must set up a new magic number to represent the unreachable
+#define INF_EDGE RAGEdge(-10); //Must set up a new magic number to represent the unreachable
 
 class eInvalNode {};
 
@@ -33,7 +33,7 @@ public:
 // Some public methods and Overrides
 public:
     void AddNode(int ID);
-    void AddPixel(int ID, rgb pixel);
+    void AddPixel(int ID, int offset, rgb pixel);
     RAGEdge& AddEdge(int srcID, int dstID);
     void MergeNode(int srcID, int dstID);
     void DelEdge(int srcID, int dstID);
@@ -71,11 +71,11 @@ void RAG::AddNode(int ID)
         nodes[ID];
 }
 
-void RAG::AddPixel(int ID, rgb pixel)
+void RAG::AddPixel(int ID, int offset, rgb pixel)
 {
     if(nodes.find(ID) == nodes.end())
         nodes[ID];
-    nodes[ID].addPixel(pixel);
+    nodes[ID].addPixel(offset, pixel);
 }
 
 RAGEdge& RAG::AddEdge(int srcID, int dstID)
@@ -93,10 +93,10 @@ void RAG::MergeNode(int srcID, int dstID)
 {
     if(adjMatrix.find(srcID) == adjMatrix.end() || adjMatrix.find(dstID) == adjMatrix.end())
         throw eInvalNode();
-    std::vector<rgb> temp = nodes[dstID].get_pixel();
+    std::map<int, rgb> temp = nodes[dstID].get_pixel();
     while(!temp.empty())
     {
-        AddPixel(srcID, temp[0]);
+        AddPixel(srcID, temp.begin()->first, temp.begin()->second);
         temp.erase(temp.begin());
     }
     nodes.erase(dstID);
