@@ -3,8 +3,9 @@
 
 class RAGEdge
 {
-private:
+public:
     float weight;
+    bool IsCaled;
 
 // Constructor and Destructor
 public:

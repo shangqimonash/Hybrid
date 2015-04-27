@@ -8,6 +8,9 @@
 #include "src/misc.h"
 #include "src/pnmfile.h"
 #include "src/segment-image.h"
+#include "src/RAG.h"
+#include "src/RAGEdge.h"
+#include "src/RAGNode.h"
 
 using namespace std;
 

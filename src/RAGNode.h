@@ -14,6 +14,7 @@ private:
 
 // Constructor and Destructor
 public:
+//    RAGNode(int offset, rgb rgbData);
     RAGNode();
     ~RAGNode() {};
 
@@ -23,12 +24,20 @@ public:
 
 // Some public methods and Overrides
 public:
-    void addPixel(int offset, rgb RGB);
+    void addPixel(int offset, rgb rgbData);
     void calculateHist(int numBin);
+    float calEntropy();
+    float calFreqEntropy();
 };
 
 #define cube(x) (x * x * x)
 #define sqrt(x) (x * x)
+
+//RAGNode::RAGNode(int offset, rgb rgbData)
+//{
+//    pixels[offset] = rgbData;
+//    hist = NULL;
+//}
 
 RAGNode::RAGNode()
 {
@@ -36,9 +45,9 @@ RAGNode::RAGNode()
     hist = NULL;
 }
 
-void RAGNode::addPixel(int offset, rgb RGB)
+void RAGNode::addPixel(int offset, rgb rgbData)
 {
-    pixels[offset] = RGB;
+    pixels[offset] = rgbData;
 }
 
 void RAGNode::calculateHist(int numBin)
@@ -61,4 +70,19 @@ void RAGNode::calculateHist(int numBin)
         hist[binR * sqrt(numBin) + binG * numBin + binB]++;
     }
 }
+
+float RAGNode::calEntropy()
+{
+    //not implemented
+    uint8_t *h = hist;
+    return 0;
+}
+
+float RAGNode::calFreqEntropy()
+{
+    //not implemented
+    uint8_t *hFreq = hist;
+    return 0;
+}
+
 #endif // RAG_NODE_H
