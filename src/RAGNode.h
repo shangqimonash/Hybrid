@@ -10,7 +10,7 @@ class RAGNode
 {
 private:
     std::map<int, rgb> pixels;
-    uint8_t *hist;
+    double *hist;
 
 // Constructor and Destructor
 public:
@@ -54,7 +54,7 @@ void RAGNode::calculateHist(int numBin)
 {
     if(hist)
         delete hist;
-    hist = new uint8_t[cube(numBin)];
+    hist = new double[cube(numBin)];
     for(int i = 0; i < cube(numBin); i++)
         hist[i] = 0;
 
@@ -63,26 +63,34 @@ void RAGNode::calculateHist(int numBin)
     for(std::map<int, rgb>::const_iterator it = pixels.begin();
         it != pixels.end(); it++)
     {
+       
+        
         int binR = it->second.r/binSize;
         int binG = it->second.g/binSize;
         int binB = it->second.b/binSize;
-
-        hist[binR * sqrt(numBin) + binG * numBin + binB]++;
+        
+        hist[binR * numBin*numBin + binG * numBin + binB]++;
     }
 }
 
 float RAGNode::calEntropy()
 {
     //not implemented
-    uint8_t *h = hist;
+    double *h = hist;
     return 0;
 }
 
 float RAGNode::calFreqEntropy()
 {
     //not implemented
-    uint8_t *hFreq = hist;
+    double *hFreq = hist;
     return 0;
 }
+
+double * getHist(){
+    return hist;
+}
+
+
 
 #endif // RAG_NODE_H

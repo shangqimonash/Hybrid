@@ -59,6 +59,7 @@ RAG::RAG(vector<int> &vecLabel, image<rgb> *im)
             {
                 /*add a node, position: y * width + x, rgb: im?*/
                 //RAGNode newNode(y * width + x, rgbImage[y * width + x]);
+                ///这里为什么没有添加操作？因为一定会找到么？
                 nodeMap[curLabel];
             }
             /*insert this pixel into an existing node*/
@@ -69,6 +70,7 @@ RAG::RAG(vector<int> &vecLabel, image<rgb> *im)
             {
                 //AddEdge should ensure edge added won't be duplicate(both direction)
                 AddEdge(curLabel, vecLabel[y * width + x + 1]);
+                
             }
 
             if ((y < height-1) && (vecLabel[y * width + x] != vecLabel[(y+1) * width + x])) {
@@ -124,6 +126,8 @@ const RAGEdge& RAG::get_edge(int srcID, int dstID)
 //    nodeMap[ID].addPixel(pixel);
 //}
 
+///无向图，src，dst两个map上面都要添加
+
 void RAG::AddEdge(int srcID, int dstID)
 {
     if(adjList.find(srcID) == adjList.end())
@@ -140,6 +144,7 @@ void RAG::AddEdge(int srcID, int dstID)
     return;
 }
 
+///edge方面，没有考虑公共edge的变化，没有更定adjList；node方面没有考虑histogram的相加变化
 void RAG::MergeNode(int srcID, int dstID)
 {
     if(adjList.find(srcID) == adjList.end() || adjList.find(dstID) == adjList.end())
