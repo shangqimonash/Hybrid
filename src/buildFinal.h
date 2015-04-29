@@ -52,6 +52,8 @@ universe* buildFinalLabel(RAG & g,std::vector<int> fhLabel, int fhNum, int binNu
             RAGNode dstNode = g.get_node((*j).first);
             double * h1=srcNode.getHist();
             double * h2=dstNode.getHist();
+            
+            // call the new region term calculated by histogram diffusion distance
             double regionTerm=diffusionDist.dd3D(h1,h2,binNum,binNum,binNum);
             //double weight=regionTerm+beta*boundaryTerm;
             double weight=regionTerm*boundaryTerm;
@@ -88,6 +90,7 @@ universe* buildFinalLabel(RAG & g,std::vector<int> fhLabel, int fhNum, int binNu
             //calculate the new weight
             double * h1=g.get_node(src).getHist();
             double * h2=g.get_node(src).getHist();
+            // call the new region term calculated by histogram diffusion distance
             double regionTerm=diffusionDist.dd3D(h1,h2,binNum,binNum,binNum);
             double boundaryTerm=g.get_edge(src,dst).weight;
             //this is another form of the weight, the beta parameter need tuing
