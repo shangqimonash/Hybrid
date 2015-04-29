@@ -31,6 +31,7 @@ public:
 
     const RAGEdge& get_edge(int srcID, int dstID);
     RAGEdge& set_edge(int srcID, int dstID);
+    void get_all_edges(std::map<int, std::map<int, RAGEdge> >& res);
 
 // Some public methods and Overrides
 public:
@@ -117,6 +118,24 @@ const RAGEdge& RAG::get_edge(int srcID, int dstID)
         return INF_EDGE;
 
     return temp.at(dstID);
+}
+
+void RAG::get_all_edges(std::map<int, std::map<int, RAGEdge> >& res)
+{
+    for(std::map<int, std::map<int, RAGEdge> >::const_iterator it_s = adjList.begin();
+            it_s != adjList.end(); it_s++)
+    {
+        for(std::map<int, RAGEdge>::const_iterator it_d = it_s->second.begin();
+            it_d != it_s->second.end(); it_d++)
+        {
+            if(res.find(it_d->first) != res.end())
+            {
+                if(res[it_d->first].find(it_s->first) != res[it_d->first].end())
+                    continue;
+            }
+            res[it_s->first][it_d->first] = adjList[it_s->first][it_d->first];
+        }
+    }
 }
 
 //void RAG::AddNode(int ID)
