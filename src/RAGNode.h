@@ -21,6 +21,7 @@ public:
 // Getter and Setter
 public:
     std::map<int, rgb>& get_pixel() { return pixels; };
+    double* getHist() { return hist; };
 
 // Some public methods and Overrides
 public:
@@ -63,12 +64,12 @@ void RAGNode::calculateHist(int numBin)
     for(std::map<int, rgb>::const_iterator it = pixels.begin();
         it != pixels.end(); it++)
     {
-       
-        
+
+
         int binR = it->second.r/binSize;
         int binG = it->second.g/binSize;
         int binB = it->second.b/binSize;
-        
+
         hist[binR * numBin*numBin + binG * numBin + binB]++;
     }
 }
@@ -87,9 +88,6 @@ float RAGNode::calFreqEntropy()
     return 0;
 }
 
-double * getHist(){
-    return hist;
-}
 
 
 

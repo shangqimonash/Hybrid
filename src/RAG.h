@@ -59,7 +59,6 @@ RAG::RAG(vector<int> &vecLabel, image<rgb> *im)
             {
                 /*add a node, position: y * width + x, rgb: im?*/
                 //RAGNode newNode(y * width + x, rgbImage[y * width + x]);
-                ///这里为什么没有添加操作？因为一定会找到么？
                 nodeMap[curLabel];
             }
             /*insert this pixel into an existing node*/
@@ -70,19 +69,26 @@ RAG::RAG(vector<int> &vecLabel, image<rgb> *im)
             {
                 //AddEdge should ensure edge added won't be duplicate(both direction)
                 AddEdge(curLabel, vecLabel[y * width + x + 1]);
-                
+                AddEdge(vecLabel[y * width + x + 1], curLabel);
+
             }
 
-            if ((y < height-1) && (vecLabel[y * width + x] != vecLabel[(y+1) * width + x])) {
+            if ((y < height-1) && (vecLabel[y * width + x] != vecLabel[(y+1) * width + x]))
+            {
                 AddEdge(curLabel, vecLabel[(y+1) * width + x]);
+                AddEdge(vecLabel[(y+1) * width + x], curLabel);
             }
 
-            if ((x < width-1) && (y < height-1) && (vecLabel[y * width + x] != vecLabel[(y+1) * width + (x+1)])) {
+            if ((x < width-1) && (y < height-1) && (vecLabel[y * width + x] != vecLabel[(y+1) * width + (x+1)]))
+            {
                 AddEdge(curLabel, vecLabel[(y+1) * width + (x+1)]);
+                AddEdge(vecLabel[(y+1) * width + (x+1)], curLabel);
             }
 
-            if ((x < width-1) && (y > 0) && (vecLabel[y * width + x] != vecLabel[(y-1) * width + (x+1)])) {
+            if ((x < width-1) && (y > 0) && (vecLabel[y * width + x] != vecLabel[(y-1) * width + (x+1)]))
+            {
                 AddEdge(curLabel, vecLabel[(y-1) * width + (x+1)]);
+                AddEdge(vecLabel[(y-1) * width + (x+1)], curLabel);
             }
         }
     }
@@ -158,6 +164,49 @@ void RAG::MergeNode(int srcID, int dstID)
         nodeMap[srcID].addPixel((*i).first, (*i).second);
         tmpNodeMap.erase(i);
     }
+
+    std::map<int, RAGEdge>& srcNeighbor = adjList.at(srcID);
+    std::map<int, RAGEdge>& dstNeighbor = adjList.at(dstID);
+
+    std::map<int, RAGEdge> shareNeighbor;
+
+    // Find the share Neighbor
+    for(std::map<int, RAGEdge>::const_iterator it_s = srcNeighbor.begin();
+            it_s != srcNeighbor.end(); it_s++)
+    {
+        for(std::map<int, RAGEdge>::const_iterator it_d = dstNeighbor.begin();
+                it_d != dstNeighbor.end(); it_d++)
+            if(it_s->first == it_d->first)
+            {
+                shareNeighbor[it_s->first] = srcNeighbor[it_s->first] + dstNeighbor[it_d->first];
+                adjList.at(it_d->first).erase(dstID);
+            }
+
+    }
+
+    // Merge the neighbor
+    for(std::map<int, RAGEdge>::const_iterator it_d = dstNeighbor.begin();
+            it_d != dstNeighbor.end(); it_d++)
+    {
+        srcNeighbor[it_d->first] = dstNeighbor[it_d->first];
+
+        // the edge is independent neighbor of dst Node
+        if(shareNeighbor.find(it_d->first) == shareNeighbor.end() && (it_d->first) != srcID && (it_d->first) != dstID)
+        {
+            adjList.at(it_d->first)[srcID] = adjList.at(it_d->first)[dstID];
+            adjList.at(it_d->first).erase(dstID);
+        }
+    }
+
+    srcNeighbor.erase(srcID);
+    srcNeighbor.erase(dstID);
+
+    // Update the share Neighbor's weight
+    for(std::map<int, RAGEdge>::const_iterator it = shareNeighbor.begin();
+            it != shareNeighbor.end(); it++)
+        srcNeighbor[it->first] = shareNeighbor[it->first];
+
+    adjList.erase(dstID);
     nodeMap.erase(dstID);
 }
 
