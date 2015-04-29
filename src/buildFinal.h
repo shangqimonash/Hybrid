@@ -15,15 +15,31 @@
 #include <vector>
 #include <algorithm>
 
+/*
+ input: 
+    g: the RAG class store the second order superpxiel
+    fhLabel: the label matrix of 2nd order superpixel
+    fhNum: the number of 2nd order superpixel
+    binNum: the bin number of each RGB chanel histogram
+    outputSPnum: the used-defined superpxiel number
+    beta: the weight parameter combining the boundary term and region term
+
+ output:
+    universe: the disjoint set. we need to call another function to convert it into vector
+ */
 
 universe* buildFinalLabel(RAG & g,std::vector<int> fhLabel, int fhNum, int binNum,int outputSPnum,double beta){
+    
     std::vector<HeapEdge> edgeArray;
     dd_dist diffusionDist;
+    
+    //get all edges in RAG to construct heap
     std::map<int, std::map<int, RAGEdge> > adjList=g.allEdges();
     
-    std::map<int, std::map<int,RAGEdge>>::iterator i;
     
-    //convert the adjacent list to edge vector
+    //convert the adjacent list in RAG class to edge vector
+    //edgeWeight=boundaryTerm*regionTerm
+    std::map<int, std::map<int,RAGEdge>>::iterator i;
     for (i = adjList.begin(); i != adjList.end(); i++)
     {
         std::map<int, RAGEdge>::iterator j;
@@ -37,38 +53,53 @@ universe* buildFinalLabel(RAG & g,std::vector<int> fhLabel, int fhNum, int binNu
             double * h1=srcNode.getHist();
             double * h2=dstNode.getHist();
             double regionTerm=diffusionDist.dd3D(h1,h2,binNum,binNum,binNum);
-            double weight=regionTerm+beta*boundaryTerm;
+            //double weight=regionTerm+beta*boundaryTerm;
+            double weight=regionTerm*boundaryTerm;
             HeapEdge heapEdge(src,dst,weight)
             edgeArray.push_back(heapEdge);
             
         }
     }
     
+    // change the edge vector to heap
     std::make_heap(edgeArray.begin(),edgeArray.end());
     
-    // make the disjoint set which is the ouput
+    // make the disjoint set to record the merge result, which is also the ouput of this function
     universe *u = new universe(fhNum);
     
+    //the superpixel number before merging
     int spNum=fhNum;
+    
+    //merge the node until the superpixel number is same the user-defined one
     while (spNum<outputSPnum) {
+        
         int src_org=edgeArray[0].src;
         int dst_org=edgeArray[0].dst;
+        // during merging, the root node can be changed. find the root node
         int src=u->find(src_org);
         int dst=u->find(dst_org);
+        
+        // two node already merged
         if (src==dst) {
             std::pop_heap (edgeArray.begin(),edgeArray.end());
             edgeArray.pop_back();
         }
         else{
+            //calculate the new weight
             double * h1=g.get_node(src).getHist();
             double * h2=g.get_node(src).getHist();
             double regionTerm=diffusionDist.dd3D(h1,h2,binNum,binNum,binNum);
             double boundaryTerm=g.get_edge(src,dst).weight;
-            double currWeight=regionTerm+beta*boundaryTerm;
+            //this is another form of the weight, the beta parameter need tuing
+            //double currWeight=regionTerm+beta*boundaryTerm;
+            double currWeight=regionTerm*boundaryTerm;
+            
+            // the merging affect the edge weight in RAG，heap need to be updated
             if (currWeight!=edgeArray[0].weight) {
                 edgeArray[0].weight=currWeight;
                 std::make_heap(edgeArray.begin(),edgeArray.end());
             }
+            // top edge is not affect by the merging process done before, we can safely merge this two node
             else{
                 g.MergeNode(src,dst);
                 u.join(src,dst);

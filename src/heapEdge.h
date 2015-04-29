@@ -8,6 +8,10 @@
 
 #ifndef Hybrid_Master_heapEdge_h
 #define Hybrid_Master_heapEdge_h
+/*
+ the edge class only used in heap during merging process
+ */
+
 class HeapEdge
 {
 public:
