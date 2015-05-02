@@ -1,0 +1,15 @@
+mode                val
+BSDS500_root        /Users/yuan/inputSuperpixel/BSR/BSDS500/data
+nImages             100
+algResSavePath      result/slic
+algorithmCommand    [S time] = segment_box(I, pN);
+parameterset parametersetName slic_50   pN 50  
+parameterset parametersetName slic_100  pN 100 
+parameterset parametersetName slic_150  pN 150
+parameterset parametersetName slic_200 pN 200
+parameterset parametersetName slic_250 pN 250
+parameterset parametersetName slic_300 pN 300
+parameterset parametersetName slic_350 pN 350
+parameterset parametersetName slic_400 pN 400
+
+

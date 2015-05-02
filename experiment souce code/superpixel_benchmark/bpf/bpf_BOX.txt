@@ -1,0 +1,15 @@
+mode                val
+BSDS500_root        /Users/yuan/inputSuperpixel/BSR/BSDS500/data
+nImages             100
+algResSavePath      result/box
+algorithmCommand    [S time] = segment_box(I, pN);
+parameterset parametersetName box_50   pN 50  
+parameterset parametersetName box_100  pN 100 
+parameterset parametersetName box_150  pN 150
+parameterset parametersetName box_200 pN 200
+parameterset parametersetName box_250 pN 250
+parameterset parametersetName box_300 pN 300
+parameterset parametersetName box_350 pN 350
+parameterset parametersetName box_400 pN 400
+
+

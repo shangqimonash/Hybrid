@@ -1,0 +1,25 @@
+每一个算法对于一个txt文档，
+
+mode                val
+BSDS500_root        /Users/yuan/inputSuperpixel/BSR/BSDS500/data
+
+上面的内容都不用该，这里的nImage改成100，对应validatoin哪个folder里面100个image
+nImages             100
+
+这个对应你算法结果保存的那个文件夹
+algResSavePath      result/box
+
+这个command你基本不需要，因为这个是在runAlgorithm里面才需要的
+algorithmCommand    [S time] = segment_box(I, pN);
+
+
+这里就按照这个方式写，需要修改的是，box_25,改成你python保存的那个parameter set的folder name，后面PN不用改，25改成你的的superpixel num
+
+parameterset parametersetName box_25   pN 25 
+parameterset parametersetName box_50   pN 50 
+parameterset parametersetName box_100  pN 100 
+parameterset parametersetName box_250  pN 250 
+parameterset parametersetName box_500  pN 500 
+parameterset parametersetName box_1000 pN 1000
+parameterset parametersetName box_2500 pN 2500 
+

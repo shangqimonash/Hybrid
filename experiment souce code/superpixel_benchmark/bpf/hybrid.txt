@@ -1,0 +1,15 @@
+mode                val
+BSDS500_root        /Users/yuan/inputSuperpixel/BSR/BSDS500/data
+nImages             100
+algResSavePath      result/hybrid
+algorithmCommand    [S time] = segment_box(I, pN);
+parameterset parametersetName hybrid_50   pN 50  
+parameterset parametersetName hybrid_100  pN 100 
+parameterset parametersetName hybrid_150  pN 150
+parameterset parametersetName hybrid_200 pN 200
+parameterset parametersetName hybrid_250 pN 250
+parameterset parametersetName hybrid_300 pN 300
+parameterset parametersetName hybrid_350 pN 350
+parameterset parametersetName hybrid_400 pN 400
+
+

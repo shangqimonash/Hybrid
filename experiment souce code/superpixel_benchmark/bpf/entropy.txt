@@ -1,0 +1,15 @@
+mode                val
+BSDS500_root        /Users/yuan/inputSuperpixel/BSR/BSDS500/data
+nImages             100
+algResSavePath      result/entropy
+algorithmCommand    [S time] = entropySuperpixel(I, pN);
+parameterset parametersetName entropy_50   pN 50  
+parameterset parametersetName entropy_100  pN 100 
+parameterset parametersetName entropy_150  pN 150
+parameterset parametersetName entropy_200 pN 200
+parameterset parametersetName entropy_250 pN 250
+parameterset parametersetName entropy_300 pN 300
+parameterset parametersetName entropy_350 pN 350
+parameterset parametersetName entropy_400 pN 400
+
+

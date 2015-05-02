@@ -1,0 +1,15 @@
+mode                val
+BSDS500_root        /Users/yuan/inputSuperpixel/BSR/BSDS500/data
+nImages             100
+algResSavePath      result/turbol
+algorithmCommand    [S time] = superpixels(I, pN);
+parameterset parametersetName turbol_50   pN 50  
+parameterset parametersetName turbol_100  pN 100 
+parameterset parametersetName turbol_150  pN 150
+parameterset parametersetName turbol_200 pN 200
+parameterset parametersetName turbol_250 pN 250
+parameterset parametersetName turbol_300 pN 300
+parameterset parametersetName turbol_350 pN 350
+parameterset parametersetName turbol_400 pN 400
+
+
