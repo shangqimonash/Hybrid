@@ -12,9 +12,12 @@ private:
     std::map<int, rgb> pixels;
     double *hist;
 
+
 // Constructor and Destructor
 public:
 //    RAGNode(int offset, rgb rgbData);
+    float rgbDistSum;
+    int rgbDistNum;
     RAGNode();
     ~RAGNode() {};
 
@@ -44,6 +47,8 @@ RAGNode::RAGNode()
 {
     pixels.clear();
     hist = NULL;
+    rgbDistSum = 0;
+    rgbDistNum = 0;
 }
 
 void RAGNode::addPixel(int offset, rgb rgbData)

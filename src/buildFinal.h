@@ -40,7 +40,7 @@ universe* buildFinalLabel(RAG & g,std::vector<int> fhLabel, int fhNum, int binNu
 
     //convert the adjacent list in RAG class to edge vector
     //edgeWeight=boundaryTerm*regionTerm
-    std::map<int, std::map<int,RAGEdge>>::iterator i;
+    std::map<int, std::map<int,RAGEdge> >::iterator i;
     for (i = adjList.begin(); i != adjList.end(); i++)
     {
         std::map<int, RAGEdge>::iterator j;
@@ -58,7 +58,7 @@ universe* buildFinalLabel(RAG & g,std::vector<int> fhLabel, int fhNum, int binNu
             double regionTerm=diffusionDist.dd3D(h1,h2,binNum,binNum,binNum);
             //double weight=regionTerm+beta*boundaryTerm;
             double weight=regionTerm*boundaryTerm;
-            HeapEdge heapEdge(src,dst,weight)
+            HeapEdge heapEdge(src,dst,weight);
             edgeArray.push_back(heapEdge);
 
         }
@@ -106,7 +106,7 @@ universe* buildFinalLabel(RAG & g,std::vector<int> fhLabel, int fhNum, int binNu
             // top edge is not affect by the merging process done before, we can safely merge this two node
             else{
                 g.MergeNode(src,dst);
-                u.join(src,dst);
+                u->join(src,dst);
                 std::pop_heap (edgeArray.begin(),edgeArray.end());
                 edgeArray.pop_back();
 

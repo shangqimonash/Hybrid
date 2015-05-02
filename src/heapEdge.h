@@ -21,12 +21,12 @@ public:
     HeapEdge(){
         src=0;
         dst=0;
-        weight=0
+        weight=0;
     }
     HeapEdge(int src,int dst,double weight){
         this->src=src;
         this->dst=dst;
-        this->weight=weight
+        this->weight=weight;
     }
     bool operator >(HeapEdge & e){
        return this->weight<e.weight;

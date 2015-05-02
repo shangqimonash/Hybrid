@@ -6,6 +6,8 @@ class RAGEdge
 public:
     float weight;
     bool IsCaled;
+    float rgbDistSum;
+    int rgbDistNum;
 
 // Constructor and Destructor
 public:
