@@ -8,17 +8,17 @@
 #include "src/misc.h"
 #include "src/pnmfile.h"
 #include "src/segment-image.h"
-#include "src/RAG.h"
-#include "src/RAGEdge.h"
-#include "src/RAGNode.h"
 
 using namespace std;
 
 int main()
 {
-    string fileName = "fishMan.ppm";
+    string fileName = "Users/yuan/inputSuperpixel/fishMan";
     printf("loading input image.\n");
-    image<rgb> *input = loadPPM(fileName.c_str());
+    //image<rgb> *input = loadPPM(fileName.c_str());
+    
+    ///上面转string我不知道用不了，直接hard code进来
+    image<rgb> *input = loadPPM("/Users/yuan/inputSuperpixel/fishMan.ppm");
 
     input->labels = new int[input->width() * input->height()];
     int numLabels(0);
@@ -37,7 +37,7 @@ int main()
     printf("processing\n");
     int num_ccs;
     image<rgb> *seg = segment_image(input, 0.7, 5, 100, &num_ccs);
-    savePPM(seg, "output.ppm");
+    savePPM(seg, "output1.ppm");
 
     printf("got %d components\n", num_ccs);
     printf("done! uff...thats hard work.\n");
