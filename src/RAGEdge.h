@@ -33,6 +33,8 @@ RAGEdge& RAGEdge::operator=(const RAGEdge& rhs)
         return *this;
 
     this->weight = rhs.weight;
+    this->rgbDistNum = rhs.rgbDistNum;
+    this->rgbDistSum = rhs.rgbDistSum;
     return *this;
 }
 
@@ -41,6 +43,8 @@ RAGEdge& RAGEdge::operator+(const RAGEdge& rhs)
     if(!rhs.IsCaled)
         return *this;
     this->weight = this->weight + rhs.weight;
+    this->rgbDistNum = this->rgbDistNum + rhs.rgbDistNum;
+    this->rgbDistSum = this->rgbDistSum + rhs.rgbDistSum;
     return *this;
 }
 

@@ -13,19 +13,23 @@ using namespace std;
 
 int main()
 {
+    time_t begin,end;
     string fileName = "Users/yuan/inputSuperpixel/fishMan";
     printf("loading input image.\n");
     //image<rgb> *input = loadPPM(fileName.c_str());
-    
+
     ///上面转string我不知道用不了，直接hard code进来
-    image<rgb> *input = loadPPM("/Users/yuan/inputSuperpixel/fishMan.ppm");
+    image<rgb> *input = loadPPM("fishMan.ppm");
 
     input->labels = new int[input->width() * input->height()];
     int numLabels(0);
     SLIC slic;
-
-    slic.PerformSLICO_ForGivenK(input->getRGBData(), input->width(), input->height(),input->labels,numLabels, 100,10);
-
+    begin = clock();
+    slic.DoSuperpixelSegmentation_ForGivenNumberOfSuperpixels(input->getRGBData(), input->width(), input->height(),input->labels,numLabels, 400,10);
+    end = clock();
+    double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+    std::cout << elapsed_secs << endl;
+    //cout << numLabels << endl;
     /*for(int j = 0; j < input->height(); j++)
     {
         for(int i = 0; i < input->width(); i++)

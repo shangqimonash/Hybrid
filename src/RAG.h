@@ -32,6 +32,7 @@ public:
     const RAGEdge& get_edge(int srcID, int dstID);
     RAGEdge& set_edge(int srcID, int dstID);
     void get_all_edges(std::map<int, std::map<int, RAGEdge> >& res);
+    std::map<int, RAGNode> getNodes(){ return nodeMap; };
 
 // Some public methods and Overrides
 public:
@@ -67,16 +68,20 @@ RAG::RAG(vector<int> &vecLabel, image<rgb> *im)
             /*insert this pixel into an existing node*/
             nodeMap[curLabel].addPixel(y * width + x, rgbImage[y * width + x]);
 
-            /*consider edge*/
-            if ((x < width-1) && (vecLabel[y * width + x] != vecLabel[y * width + x + 1]))
+            /*consider edge*/ // The edge must in the same superpixel
+            if ((x < width-1) && (im->labels[y * width + x] == im->labels[y * width + x + 1]) && (vecLabel[y * width + x] != vecLabel[y * width + x + 1]))
             {
                 //AddEdge should ensure edge added won't be duplicate(both direction)
                 AddEdge(curLabel, vecLabel[y * width + x + 1]);
                 AddEdge(vecLabel[y * width + x + 1], curLabel);
 
-                RAGEdge &tmpEdge = (adjList[curLabel][vecLabel[y * width + x + 1]]);
-                tmpEdge.rgbDistSum += rgbDistance(rgbImage[y * width + x], rgbImage[y * width + x + 1]);
-                tmpEdge.rgbDistNum ++;
+                RAGEdge &tmpEdge1 = (adjList[curLabel][vecLabel[y * width + x + 1]]);
+                tmpEdge1.rgbDistSum += rgbDistance(rgbImage[y * width + x], rgbImage[y * width + x + 1]);
+                tmpEdge1.rgbDistNum ++;
+
+                RAGEdge &tmpEdge2 = (adjList[vecLabel[y * width + x + 1]][curLabel]);
+                tmpEdge2.rgbDistSum += rgbDistance(rgbImage[y * width + x], rgbImage[y * width + x + 1]);
+                tmpEdge2.rgbDistNum ++;
             }
             else
             {
@@ -85,14 +90,18 @@ RAG::RAG(vector<int> &vecLabel, image<rgb> *im)
                 tmpNode.rgbDistNum ++;
             }
 
-            if ((y < height-1) && (vecLabel[y * width + x] != vecLabel[(y+1) * width + x]))
+            if ((y < height-1) && (im->labels[y * width + x] == im->labels[(y+1) * width + x]) && (vecLabel[y * width + x] != vecLabel[(y+1) * width + x]))
             {
                 AddEdge(curLabel, vecLabel[(y+1) * width + x]);
                 AddEdge(vecLabel[(y+1) * width + x], curLabel);
 
-                RAGEdge &tmpEdge = (adjList[curLabel][vecLabel[(y+1) * width + x]]);
-                tmpEdge.rgbDistSum += rgbDistance(rgbImage[y * width + x], rgbImage[(y+1) * width + x]);
-                tmpEdge.rgbDistNum ++;
+                RAGEdge &tmpEdge1 = (adjList[curLabel][vecLabel[(y+1) * width + x]]);
+                tmpEdge1.rgbDistSum += rgbDistance(rgbImage[y * width + x], rgbImage[(y+1) * width + x]);
+                tmpEdge1.rgbDistNum ++;
+
+                RAGEdge &tmpEdge2 = (adjList[vecLabel[(y+1) * width + x]][curLabel]);
+                tmpEdge2.rgbDistSum += rgbDistance(rgbImage[y * width + x], rgbImage[(y+1) * width + x]);
+                tmpEdge2.rgbDistNum ++;
             }
             else
             {
@@ -101,14 +110,18 @@ RAG::RAG(vector<int> &vecLabel, image<rgb> *im)
                 tmpNode.rgbDistNum ++;
             }
 
-            if ((x < width-1) && (y < height-1) && (vecLabel[y * width + x] != vecLabel[(y+1) * width + (x+1)]))
+            if ((x < width-1) && (y < height-1) && (im->labels[y * width + x] == im->labels[(y+1) * width + (x+1)]) && (vecLabel[y * width + x] != vecLabel[(y+1) * width + (x+1)]))
             {
                 AddEdge(curLabel, vecLabel[(y+1) * width + (x+1)]);
                 AddEdge(vecLabel[(y+1) * width + (x+1)], curLabel);
 
-                RAGEdge &tmpEdge = (adjList[curLabel][vecLabel[(y+1) * width + (x+1)]]);
-                tmpEdge.rgbDistSum += rgbDistance(rgbImage[y * width + x], rgbImage[(y+1) * width + (x+1)]);
-                tmpEdge.rgbDistNum ++;
+                RAGEdge &tmpEdge1 = (adjList[curLabel][vecLabel[(y+1) * width + (x+1)]]);
+                tmpEdge1.rgbDistSum += rgbDistance(rgbImage[y * width + x], rgbImage[(y+1) * width + (x+1)]);
+                tmpEdge1.rgbDistNum ++;
+
+                RAGEdge &tmpEdge2 = (adjList[vecLabel[(y+1) * width + (x+1)]][curLabel]);
+                tmpEdge2.rgbDistSum += rgbDistance(rgbImage[y * width + x], rgbImage[(y+1) * width + (x+1)]);
+                tmpEdge2.rgbDistNum ++;
             }
             else
             {
@@ -117,14 +130,18 @@ RAG::RAG(vector<int> &vecLabel, image<rgb> *im)
                 tmpNode.rgbDistNum ++;
             }
 
-            if ((x < width-1) && (y > 0) && (vecLabel[y * width + x] != vecLabel[(y-1) * width + (x+1)]))
+            if ((x < width-1) && (y > 0) && (im->labels[y * width + x] == im->labels[(y-1) * width + (x+1)]) && (vecLabel[y * width + x] != vecLabel[(y-1) * width + (x+1)]))
             {
                 AddEdge(curLabel, vecLabel[(y-1) * width + (x+1)]);
                 AddEdge(vecLabel[(y-1) * width + (x+1)], curLabel);
 
-                RAGEdge &tmpEdge = (adjList[curLabel][vecLabel[(y-1) * width + (x+1)]]);
-                tmpEdge.rgbDistSum += rgbDistance(rgbImage[y * width + x], rgbImage[(y-1) * width + (x+1)]);
-                tmpEdge.rgbDistNum ++;
+                RAGEdge &tmpEdge1 = (adjList[curLabel][vecLabel[(y-1) * width + (x+1)]]);
+                tmpEdge1.rgbDistSum += rgbDistance(rgbImage[y * width + x], rgbImage[(y-1) * width + (x+1)]);
+                tmpEdge1.rgbDistNum ++;
+
+                RAGEdge &tmpEdge2 = (adjList[vecLabel[(y-1) * width + (x+1)]][curLabel]);
+                tmpEdge2.rgbDistSum += rgbDistance(rgbImage[y * width + x], rgbImage[(y-1) * width + (x+1)]);
+                tmpEdge2.rgbDistNum ++;
             }
             else
             {
@@ -167,8 +184,10 @@ void RAG::get_all_edges(std::map<int, std::map<int, RAGEdge> >& res)
             it_s != adjList.end(); it_s++)
     {
         for(std::map<int, RAGEdge>::const_iterator it_d = it_s->second.begin();
-            it_d != it_s->second.end(); it_d++)
+                it_d != it_s->second.end(); it_d++)
         {
+            CalEdgeWeight(it_s->first, it_d->first);
+            CalEdgeWeight(it_d->first, it_s->first);
             if(res.find(it_d->first) != res.end())
             {
                 if(res[it_d->first].find(it_s->first) != res[it_d->first].end())
@@ -232,50 +251,50 @@ void RAG::MergeNode(int srcID, int dstID)
     srcNode.rgbDistNum += dstNode.rgbDistNum;
 
 
-    /*Find share neighbor node*/
-    /*update the edge between share neighbor and merged nodes*/
-    /*delete the edge no longer used(connected to share neighbor)*/
     std::map<int, RAGEdge>& srcNeighbor = adjList.at(srcID);
     std::map<int, RAGEdge>& dstNeighbor = adjList.at(dstID);
+
     std::map<int, RAGEdge> shareNeighbor;
-    for(std::map<int, RAGEdge>::iterator itSrcNeighbor = srcNeighbor.begin();
-        itSrcNeighbor != srcNeighbor.end(); itSrcNeighbor++)
+
+    // Find the share Neighbor
+    for(std::map<int, RAGEdge>::const_iterator it_s = srcNeighbor.begin();
+            it_s != srcNeighbor.end(); it_s++)
     {
-        /*edge between neighbor and src*/
-        RAGEdge &srcShareNeighborEdge = (*itSrcNeighbor).second;
-
-        for(std::map<int, RAGEdge>::iterator itDstNeighbor = dstNeighbor.begin();
-            itDstNeighbor != dstNeighbor.end(); itDstNeighbor++)
-        {
-            /*edge between neighbor and dst*/
-            RAGEdge &dstShareNeighborEdge = (*itDstNeighbor).second;
-
-            /*delete the edge between dst and its neighbors and add edge between these neighbors and src*/
-            adjList[dstID].erase(itDstNeighbor->first);
-            adjList[itDstNeighbor->first].erase(dstID);
-
-            /*add edge to src*/
-            AddEdge(srcID, itDstNeighbor->first);
-            AddEdge(itDstNeighbor->first, srcID);
-
-            /*find a share neighbor*/
-            if(itSrcNeighbor->first == itDstNeighbor->first)
+        for(std::map<int, RAGEdge>::const_iterator it_d = dstNeighbor.begin();
+                it_d != dstNeighbor.end(); it_d++)
+            if(it_s->first == it_d->first)
             {
-//                shareNeighbor[itSrcNeighbor->first] = srcNeighbor[itSrcNeighbor->first] + dstNeighbor[itDstNeighbor->first];
-                /*update the edge between the share neighbor and src*/
-                srcShareNeighborEdge.rgbDistSum += dstShareNeighborEdge.rgbDistSum;
-                srcShareNeighborEdge.rgbDistNum += dstShareNeighborEdge.rgbDistNum;
-                /*delete the edge between the share neighbor and dst*/
-//                dstNeighbor[itDstNeighbor->first].erase(dstID);
-//                adjList.at(itDstNeighbor->first).erase(dstID);
+                shareNeighbor[it_s->first] = srcNeighbor[it_s->first] + dstNeighbor[it_d->first];
+                CalEdgeWeight(srcID, it_s->first);
+                adjList.at(it_d->first).erase(dstID);
             }
 
-            /*calculate the weight of edge again*/
-            CalEdgeWeight(srcID, itDstNeighbor->first);
-        }
-        /*calculate the weight of edge again*/
-        CalEdgeWeight(srcID, itSrcNeighbor->first);
     }
+
+    // Merge the neighbor
+    for(std::map<int, RAGEdge>::const_iterator it_d = dstNeighbor.begin();
+            it_d != dstNeighbor.end(); it_d++)
+    {
+        srcNeighbor[it_d->first] = dstNeighbor[it_d->first];
+
+        // the edge is independent neighbor of dst Node
+        if(shareNeighbor.find(it_d->first) == shareNeighbor.end() && (it_d->first) != srcID && (it_d->first) != dstID)
+        {
+            adjList.at(it_d->first)[srcID] = adjList.at(it_d->first)[dstID];
+            adjList.at(it_d->first).erase(dstID);
+        }
+    }
+
+    srcNeighbor.erase(srcID);
+    srcNeighbor.erase(dstID);
+
+    // Update the share Neighbor's weight
+    for(std::map<int, RAGEdge>::const_iterator it = shareNeighbor.begin();
+            it != shareNeighbor.end(); it++)
+        srcNeighbor[it->first] = shareNeighbor[it->first];
+
+    adjList.erase(dstID);
+    nodeMap.erase(dstID);
 
     /*update edge only connected to src*/
     /*update edge only connected to dst*/
@@ -318,8 +337,8 @@ void RAG::CalEdgeWeight()
 //                float purityAfter = (srcNode.calFreqEntropy() + dstNode.calFreqEntropy()) / 2;
 //                (*j).second.weight = purityAfter - purityBefore;
                 tmpEdge.weight = (2*tmpEdge.rgbDistSum/(float)tmpEdge.rgbDistNum)
-                                  /(srcNode.rgbDistSum/(float)srcNode.rgbDistNum
-                                    + dstNode.rgbDistSum/(float)dstNode.rgbDistNum);
+                                 /(srcNode.rgbDistSum/(float)srcNode.rgbDistNum
+                                   + dstNode.rgbDistSum/(float)dstNode.rgbDistNum);
                 (*j).second.IsCaled = true;
             }
         }
@@ -335,8 +354,8 @@ void RAG::CalEdgeWeight(int srcID, int dstID)
 //                float purityAfter = (srcNode.calFreqEntropy() + dstNode.calFreqEntropy()) / 2;
 //                (*j).second.weight = purityAfter - purityBefore;
     tmpEdge.weight = (2*tmpEdge.rgbDistSum/(float)tmpEdge.rgbDistNum)
-                      /(srcNode.rgbDistSum/(float)srcNode.rgbDistNum
-                        + dstNode.rgbDistSum/(float)dstNode.rgbDistNum);
+                     /(srcNode.rgbDistSum/(float)srcNode.rgbDistNum
+                       + dstNode.rgbDistSum/(float)dstNode.rgbDistNum);
 }
 
 #endif // RAG_H

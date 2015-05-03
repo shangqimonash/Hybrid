@@ -28,7 +28,8 @@
     universe: the disjoint set. we need to call another function to convert it into vector
  */
 
-universe* buildFinalLabel(RAG & g,std::vector<int> fhLabel, int fhNum, int binNum,int outputSPnum,double beta){
+universe* buildFinalLabel(RAG & g,std::vector<int> &fhLabel, int fhNum, int binNum,int outputSPnum,double beta)
+{
 
     std::vector<HeapEdge> edgeArray;
     dd_dist diffusionDist;
@@ -51,6 +52,8 @@ universe* buildFinalLabel(RAG & g,std::vector<int> fhLabel, int fhNum, int binNu
             float boundaryTerm=(*j).second.weight;
             RAGNode srcNode = g.get_node((*i).first);
             RAGNode dstNode = g.get_node((*j).first);
+            srcNode.calculateHist(binNum);
+            dstNode.calculateHist(binNum);
             double * h1=srcNode.getHist();
             double * h2=dstNode.getHist();
 
@@ -74,7 +77,8 @@ universe* buildFinalLabel(RAG & g,std::vector<int> fhLabel, int fhNum, int binNu
     int spNum=fhNum;
 
     //merge the node until the superpixel number is same the user-defined one
-    while (spNum<outputSPnum) {
+    while (spNum>outputSPnum)
+    {
 
         int src_org=edgeArray[0].src;
         int dst_org=edgeArray[0].dst;
@@ -83,14 +87,18 @@ universe* buildFinalLabel(RAG & g,std::vector<int> fhLabel, int fhNum, int binNu
         int dst=u->find(dst_org);
 
         // two node already merged
-        if (src==dst) {
+        if (src==dst)
+        {
             std::pop_heap (edgeArray.begin(),edgeArray.end());
             edgeArray.pop_back();
         }
-        else{
+        else
+        {
             //calculate the new weight
+            g.get_node(src).calculateHist(binNum);
+            g.get_node(dst).calculateHist(binNum);
             double * h1=g.get_node(src).getHist();
-            double * h2=g.get_node(src).getHist();
+            double * h2=g.get_node(dst).getHist();
             // call the new region term calculated by histogram diffusion distance
             double regionTerm=diffusionDist.dd3D(h1,h2,binNum,binNum,binNum);
             double boundaryTerm=g.get_edge(src,dst).weight;
@@ -99,17 +107,22 @@ universe* buildFinalLabel(RAG & g,std::vector<int> fhLabel, int fhNum, int binNu
             double currWeight=regionTerm*boundaryTerm;
 
             // the merging affect the edge weight in RAG，heap need to be updated
-            if (currWeight!=edgeArray[0].weight) {
+            if (currWeight!=edgeArray[0].weight)
+            {
                 edgeArray[0].weight=currWeight;
                 std::make_heap(edgeArray.begin(),edgeArray.end());
             }
             // top edge is not affect by the merging process done before, we can safely merge this two node
-            else{
-                g.MergeNode(src,dst);
+            else
+            {
                 u->join(src,dst);
+                if(u->find(src) == src)
+                    g.MergeNode(src,dst);
+                else
+                    g.MergeNode(dst, src);
+                spNum--;
                 std::pop_heap (edgeArray.begin(),edgeArray.end());
                 edgeArray.pop_back();
-
             }
         }
     }
