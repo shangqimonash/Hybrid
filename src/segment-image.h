@@ -232,31 +232,37 @@ image<rgb> *segment_image(image<rgb> *im, float sigma, float c, int min_size,
     delete [] edges;
     *num_ccs = u->num_sets();
     end = clock();
-    double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-    std::cout << elapsed_secs << endl;
+
     std::map<int ,vector<int> > mapNode;
     std::vector<int> vecLabel;
+    // Construct RAG
+    universeToVector(im, u, mapNode, vecLabel);
+
+
+
+    double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+    std::cout << elapsed_secs << endl;
+
     std::map<int, vector<int> > finalNode;
     std::map<int, int> finalLabel;
     begin = clock();
-    // Construct RAG
-    universeToVector(im, u, mapNode, vecLabel);
+
     RAG rag(vecLabel, im);
 
-    universe *final_u = buildFinalLabel(rag, vecLabel, *num_ccs, 5, 400, 1);
+    universe *final_u = buildFinalLabel(rag, vecLabel, *num_ccs, 5, 100, 1);
     end = clock();
     elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
     std::cout << elapsed_secs << endl;
     ragToVector(im, rag, finalLabel);
 
-    /*for(int j = 0; j < height; j++)
+    for(int j = 0; j < height; j++)
     {
         for(int i = 0; i < width; i++)
         {
             cout << finalLabel[j*width + i] << " ";
         }
         cout << endl;
-    }*/
+    }
 
     image<rgb> *output = new image<rgb>(width, height);
 

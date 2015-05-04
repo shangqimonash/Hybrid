@@ -60,7 +60,7 @@ universe* buildFinalLabel(RAG & g,std::vector<int> &fhLabel, int fhNum, int binN
             // call the new region term calculated by histogram diffusion distance
             double regionTerm=diffusionDist.dd3D(h1,h2,binNum,binNum,binNum);
             //double weight=regionTerm+beta*boundaryTerm;
-            double weight=regionTerm*boundaryTerm;
+            double weight=regionTerm * boundaryTerm;
             HeapEdge heapEdge(src,dst,weight);
             edgeArray.push_back(heapEdge);
 
@@ -104,7 +104,7 @@ universe* buildFinalLabel(RAG & g,std::vector<int> &fhLabel, int fhNum, int binN
             double boundaryTerm=g.get_edge(src,dst).weight;
             //this is another form of the weight, the beta parameter need tuing
             //double currWeight=regionTerm+beta*boundaryTerm;
-            double currWeight=regionTerm*boundaryTerm;
+            double currWeight=regionTerm * boundaryTerm;
 
             // the merging affect the edge weight in RAG，heap need to be updated
             if (currWeight!=edgeArray[0].weight)
@@ -115,12 +115,16 @@ universe* buildFinalLabel(RAG & g,std::vector<int> &fhLabel, int fhNum, int binN
             // top edge is not affect by the merging process done before, we can safely merge this two node
             else
             {
-                u->join(src,dst);
-                if(u->find(src) == src)
-                    g.MergeNode(src,dst);
-                else
-                    g.MergeNode(dst, src);
-                spNum--;
+                if((g.get_node(src).get_pixel().size() < g.getSize()*2/outputSPnum) &&
+                        (g.get_node(dst).get_pixel().size() < g.getSize()*2/outputSPnum))
+                {
+                    u->join(src,dst);
+                    if(u->find(src) == src)
+                        g.MergeNode(src,dst);
+                    else
+                        g.MergeNode(dst, src);
+                    spNum--;
+                }
                 std::pop_heap (edgeArray.begin(),edgeArray.end());
                 edgeArray.pop_back();
             }

@@ -18,6 +18,7 @@ private:
     std::map<int, RAGNode> nodeMap;
     /*adjacent list*/
     std::map<int, std::map<int, RAGEdge> > adjList;
+    int width, height;
 
 // Constructor and Destructor
 public:
@@ -28,7 +29,7 @@ public:
 public:
     RAGNode& get_node(int ID);
     RAGNode& set_node(int ID);
-
+    int getSize() const { return width * height; };
     const RAGEdge& get_edge(int srcID, int dstID);
     RAGEdge& set_edge(int srcID, int dstID);
     void get_all_edges(std::map<int, std::map<int, RAGEdge> >& res);
@@ -49,8 +50,8 @@ public:
 
 RAG::RAG(vector<int> &vecLabel, image<rgb> *im)
 {
-    int height = im->height();
-    int width = im->width();
+    this->height = im->height();
+    this->width = im->width();
     rgb *rgbImage = im->data;
 
     for (int y = 0; y < height; y++)
@@ -69,7 +70,7 @@ RAG::RAG(vector<int> &vecLabel, image<rgb> *im)
             nodeMap[curLabel].addPixel(y * width + x, rgbImage[y * width + x]);
 
             /*consider edge*/ // The edge must in the same superpixel
-            if ((x < width-1) && (im->labels[y * width + x] == im->labels[y * width + x + 1]) && (vecLabel[y * width + x] != vecLabel[y * width + x + 1]))
+            if ((x < width-1) && (vecLabel[y * width + x] != vecLabel[y * width + x + 1]))
             {
                 //AddEdge should ensure edge added won't be duplicate(both direction)
                 AddEdge(curLabel, vecLabel[y * width + x + 1]);
@@ -90,7 +91,7 @@ RAG::RAG(vector<int> &vecLabel, image<rgb> *im)
                 tmpNode.rgbDistNum ++;
             }
 
-            if ((y < height-1) && (im->labels[y * width + x] == im->labels[(y+1) * width + x]) && (vecLabel[y * width + x] != vecLabel[(y+1) * width + x]))
+            if ((y < height-1) && (vecLabel[y * width + x] != vecLabel[(y+1) * width + x]))
             {
                 AddEdge(curLabel, vecLabel[(y+1) * width + x]);
                 AddEdge(vecLabel[(y+1) * width + x], curLabel);
@@ -110,7 +111,7 @@ RAG::RAG(vector<int> &vecLabel, image<rgb> *im)
                 tmpNode.rgbDistNum ++;
             }
 
-            if ((x < width-1) && (y < height-1) && (im->labels[y * width + x] == im->labels[(y+1) * width + (x+1)]) && (vecLabel[y * width + x] != vecLabel[(y+1) * width + (x+1)]))
+            if ((x < width-1) && (y < height-1) && (vecLabel[y * width + x] != vecLabel[(y+1) * width + (x+1)]))
             {
                 AddEdge(curLabel, vecLabel[(y+1) * width + (x+1)]);
                 AddEdge(vecLabel[(y+1) * width + (x+1)], curLabel);
@@ -130,7 +131,7 @@ RAG::RAG(vector<int> &vecLabel, image<rgb> *im)
                 tmpNode.rgbDistNum ++;
             }
 
-            if ((x < width-1) && (y > 0) && (im->labels[y * width + x] == im->labels[(y-1) * width + (x+1)]) && (vecLabel[y * width + x] != vecLabel[(y-1) * width + (x+1)]))
+            if ((x < width-1) && (y > 0) && (vecLabel[y * width + x] != vecLabel[(y-1) * width + (x+1)]))
             {
                 AddEdge(curLabel, vecLabel[(y-1) * width + (x+1)]);
                 AddEdge(vecLabel[(y-1) * width + (x+1)], curLabel);

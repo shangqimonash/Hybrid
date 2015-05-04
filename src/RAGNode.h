@@ -12,7 +12,6 @@ private:
     std::map<int, rgb> pixels;
     double *hist;
 
-
 // Constructor and Destructor
 public:
 //    RAGNode(int offset, rgb rgbData);

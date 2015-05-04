@@ -19,13 +19,13 @@ int main()
     //image<rgb> *input = loadPPM(fileName.c_str());
 
     ///上面转string我不知道用不了，直接hard code进来
-    image<rgb> *input = loadPPM("fishMan.ppm");
+    image<rgb> *input = loadPPM("../../fishMan.ppm");
 
     input->labels = new int[input->width() * input->height()];
     int numLabels(0);
     SLIC slic;
     begin = clock();
-    slic.DoSuperpixelSegmentation_ForGivenNumberOfSuperpixels(input->getRGBData(), input->width(), input->height(),input->labels,numLabels, 400,10);
+    slic.DoSuperpixelSegmentation_ForGivenNumberOfSuperpixels(input->getRGBData(), input->width(), input->height(),input->labels,numLabels, 100,10);
     end = clock();
     double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
     std::cout << elapsed_secs << endl;
