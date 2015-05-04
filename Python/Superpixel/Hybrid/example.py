@@ -82,7 +82,7 @@ g=rag_staticHist.construct_rag(imgFloat,segments_slic,region_fh,slicNum,binNum)
 
 g.freqUpdate()
 
-#g=global_rag.construct_rag(img,segments_slic,region_fh,slicNum,binNum)
+g=global_rag.construct_rag(img,segments_slic,region_fh,slicNum,binNum)
 
 #还可以使用lab颜色空间来建立histogram，有一些会过多分出，但是有些手臂又可以识别，所以要找到一个合适的颜
 #区分的方法

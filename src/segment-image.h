@@ -144,9 +144,14 @@ void ragToVector(image<rgb> *im, RAG rag,
  * c: constant for treshold function.
  * min_size: minimum component size (enforced by post-processing stage).
  * num_ccs: number of connected components in the segmentation.
+ 
+ * 返回map<int, int> finalLabel: pixelIndex 转换为 labelIndex
  */
-image<rgb> *segment_image(image<rgb> *im, float sigma, float c, int min_size,
-                          int *num_ccs)
+//image<rgb> *segment_image(image<rgb> *im, float sigma, float c, int min_size,
+//                         int *num_ccs)
+std::map<int, int>  segment_image(image<rgb> *im, float sigma, float c, int min_size,
+                                 int *num_ccs)
+
 {
     time_t begin,end;
     begin = clock();
@@ -255,6 +260,7 @@ image<rgb> *segment_image(image<rgb> *im, float sigma, float c, int min_size,
     std::cout << elapsed_secs << endl;
     ragToVector(im, rag, finalLabel);
 
+    
     for(int j = 0; j < height; j++)
     {
         for(int i = 0; i < width; i++)
@@ -284,7 +290,7 @@ image<rgb> *segment_image(image<rgb> *im, float sigma, float c, int min_size,
     delete u;
     delete final_u;
 
-    return output;
+    return finalLabel;
 }
 
 #endif

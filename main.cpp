@@ -40,9 +40,19 @@ int main()
 
     printf("processing\n");
     int num_ccs;
-    image<rgb> *seg = segment_image(input, 0.7, 5, 100, &num_ccs);
+    //image<rgb> *seg = segment_image(input, 0.7, 5, 100, &num_ccs);
+    
+    /// finalLabel的内容是 pixelIndex 转换为 labelIndex
+    
+    std::map<int, int> finalLabel;
+    finalLabel=segment_image(input, 0.7, 5, 100, &num_ccs);
+    
+    
+    
+    /*
     savePPM(seg, "output1.ppm");
 
     printf("got %d components\n", num_ccs);
     printf("done! uff...thats hard work.\n");
+     */
 }
