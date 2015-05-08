@@ -120,7 +120,7 @@ void ragToVector(image<rgb> *im, RAG rag,
     int height = im->height();
 
     std::map<int, RAGNode> nodes = rag.getNodes();
-    std::cout<< nodes.size() << endl;
+    //std::cout<< nodes.size() << endl;
     for(std::map<int, RAGNode>::iterator it = nodes.begin();
         it != nodes.end(); it++)
     {
@@ -245,8 +245,8 @@ std::map<int, int>  segment_image(image<rgb> *im, float sigma, float c, int min_
 
 
 
-    double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-    std::cout << elapsed_secs << endl;
+    /*double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+    std::cout << elapsed_secs << endl;*/
 
     std::map<int, vector<int> > finalNode;
     std::map<int, int> finalLabel;
@@ -254,10 +254,10 @@ std::map<int, int>  segment_image(image<rgb> *im, float sigma, float c, int min_
 
     RAG rag(vecLabel, im);
 
-    universe *final_u = buildFinalLabel(rag, vecLabel, *num_ccs, 5, 100, 1);
-    end = clock();
+    universe *final_u = buildFinalLabel(rag, vecLabel, *num_ccs, 5, 400, 1);
+    /*end = clock();
     elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-    std::cout << elapsed_secs << endl;
+    std::cout << elapsed_secs << endl;*/
     ragToVector(im, rag, finalLabel);
 
     

@@ -60,7 +60,7 @@ universe* buildFinalLabel(RAG & g,std::vector<int> &fhLabel, int fhNum, int binN
             // call the new region term calculated by histogram diffusion distance
             double regionTerm=diffusionDist.dd3D(h1,h2,binNum,binNum,binNum);
             //double weight=regionTerm+beta*boundaryTerm;
-            double weight=regionTerm * boundaryTerm;
+            double weight=boundaryTerm;
             HeapEdge heapEdge(src,dst,weight);
             edgeArray.push_back(heapEdge);
 
@@ -77,9 +77,8 @@ universe* buildFinalLabel(RAG & g,std::vector<int> &fhLabel, int fhNum, int binN
     int spNum=fhNum;
 
     //merge the node until the superpixel number is same the user-defined one
-    while (spNum>outputSPnum)
+    while (spNum>outputSPnum && edgeArray.size() > 0)
     {
-
         int src_org=edgeArray[0].src;
         int dst_org=edgeArray[0].dst;
         // during merging, the root node can be changed. find the root node
@@ -104,7 +103,7 @@ universe* buildFinalLabel(RAG & g,std::vector<int> &fhLabel, int fhNum, int binN
             double boundaryTerm=g.get_edge(src,dst).weight;
             //this is another form of the weight, the beta parameter need tuing
             //double currWeight=regionTerm+beta*boundaryTerm;
-            double currWeight=regionTerm * boundaryTerm;
+            double currWeight=boundaryTerm;
 
             // the merging affect the edge weight in RAG，heap need to be updated
             if (currWeight!=edgeArray[0].weight)
